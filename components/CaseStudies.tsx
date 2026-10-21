@@ -261,6 +261,7 @@ export default function CaseStudies() {
                         width={28}
                         height={28}
                         className="object-contain"
+                        style={{ width: "auto", height: "auto" }}
                       />
                     </div>
                   )}
@@ -357,6 +358,7 @@ export default function CaseStudies() {
                       width={22}
                       height={22}
                       className="object-contain"
+                      style={{ width: "auto", height: "auto" }}
                     />
                   </div>
                 )}
