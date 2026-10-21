@@ -1,20 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, MouseEvent } from "react";
 import Image from "next/image";
 import {
   ExternalLink,
-  ChevronRight,
   X,
   CheckCircle2,
-  Terminal,
   Layers,
-  BookOpen,
-  Search,
-  Cpu,
   ShieldAlert,
   ArrowRight,
-  Code2,
 } from "lucide-react";
 
 interface CaseStudy {
@@ -179,6 +173,146 @@ const caseStudiesData: CaseStudy[] = [
   },
 ];
 
+// Spotlight card sub-component tracking cursor position
+function SpotlightCard({
+  project,
+  onOpenModal,
+}: {
+  project: CaseStudy;
+  onOpenModal: () => void;
+}) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [coords, setCoords] = useState({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    setCoords({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    });
+  };
+
+  return (
+    <div
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className="spotlight-card group relative flex flex-col justify-between p-6 sm:p-7 rounded-2xl bg-zinc-950/60 border border-white/[0.08] overflow-hidden"
+    >
+      {/* Dynamic Cursor Spotlight Overlay */}
+      <div
+        className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        style={{
+          background: isHovered
+            ? `radial-gradient(420px circle at ${coords.x}px ${coords.y}px, rgba(255, 255, 255, 0.06), transparent 60%)`
+            : "none",
+        }}
+        aria-hidden="true"
+      />
+
+      <div className="relative z-10">
+        {/* Card Top: Badges & Links */}
+        <div className="flex items-center justify-between gap-3 mb-5">
+          <span className="font-mono text-xs px-2.5 py-1 rounded-md bg-zinc-900 border border-white/[0.1] text-zinc-300 font-medium">
+            {project.statusBadge}
+          </span>
+
+          <div className="flex items-center gap-2">
+            {project.liveUrl && (
+              <a
+                href={project.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.08] transition-colors"
+                aria-label={`Open ${project.title} live link`}
+              >
+                <ExternalLink className="w-4 h-4" />
+              </a>
+            )}
+          </div>
+        </div>
+
+        {/* Title & Tagline */}
+        <div className="flex items-start gap-3.5 mb-3">
+          {project.logoUrl && (
+            <div className="w-10 h-10 rounded-xl bg-zinc-900 border border-white/[0.1] p-1.5 flex items-center justify-center shrink-0 shadow-sm">
+              <Image
+                src={project.logoUrl}
+                alt={`${project.title} logo`}
+                width={28}
+                height={28}
+                className="object-contain"
+                style={{ width: "auto", height: "auto" }}
+              />
+            </div>
+          )}
+          <div>
+            <h3 className="text-xl font-bold tracking-tight text-white group-hover:text-zinc-100 transition-colors">
+              {project.title}
+            </h3>
+            <p className="text-xs text-zinc-400 font-medium mt-0.5">{project.subtitle}</p>
+          </div>
+        </div>
+
+        <p className="text-sm text-zinc-300 leading-relaxed mt-2.5">
+          {project.tagline}
+        </p>
+
+        {/* Evidence snippet */}
+        <div className="grid grid-cols-3 gap-2 my-5 p-3.5 rounded-xl bg-zinc-900/60 border border-white/[0.05]">
+          {project.evidence.map((item, idx) => (
+            <div key={idx} className="text-left">
+              <div className="text-[11px] text-zinc-400 font-mono">{item.label}</div>
+              <div className="text-xs font-semibold text-zinc-200 mt-0.5 truncate">
+                {item.value}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Tech tags */}
+        <div className="flex flex-wrap gap-1.5 mb-6">
+          {project.tags.map((tag) => (
+            <span
+              key={tag}
+              className="text-[11px] font-mono px-2.5 py-0.5 rounded-md bg-white/[0.03] text-zinc-300 border border-white/[0.07]"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* Action Button */}
+      <div className="relative z-10 pt-4 border-t border-white/[0.06] flex items-center justify-between">
+        <button
+          type="button"
+          onClick={onOpenModal}
+          className="flex items-center gap-1.5 text-xs font-semibold text-zinc-200 hover:text-white transition-colors group/btn"
+        >
+          <span>Read Full Case Study</span>
+          <ArrowRight className="w-3.5 h-3.5 group-hover/btn:translate-x-1 transition-transform" />
+        </button>
+
+        {project.liveUrl && (
+          <a
+            href={project.liveUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs font-medium text-zinc-400 hover:text-white flex items-center gap-1 transition-colors"
+          >
+            <span>Visit Live</span>
+            <ExternalLink className="w-3 h-3" />
+          </a>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function CaseStudies() {
   const [activeModalId, setActiveModalId] = useState<string | null>(null);
 
@@ -206,137 +340,43 @@ export default function CaseStudies() {
   const activeStudy = caseStudiesData.find((study) => study.id === activeModalId);
 
   return (
-    <section id="work" className="py-24 border-t border-white/[0.08] relative">
+    <section id="work" className="py-24 relative">
+      <div className="hairline-divider mb-20" />
+
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* Section Header */}
         <div className="max-w-2xl mb-14">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-xs font-mono text-slate-300 uppercase tracking-wider mb-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-white/[0.08] text-xs font-mono text-zinc-300 uppercase tracking-wider mb-3">
             <Layers className="w-3.5 h-3.5 text-blue-400" />
             <span>Featured Case Studies</span>
           </div>
-          <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-white">
+          <h2 className="text-2xl sm:text-4xl font-bold tracking-[-0.03em] text-white">
             Products built with intent, evidence, and clear trade-offs.
           </h2>
-          <p className="text-slate-400 text-sm sm:text-base mt-3">
+          <p className="text-zinc-400 text-sm sm:text-base mt-3 leading-relaxed">
             Deep-dive explorations across educational platforms, developer infrastructure, and applied AI systems.
           </p>
         </div>
 
-        {/* 4 Asymmetric Case Study Cards */}
+        {/* 4 Spotlight Case Study Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {caseStudiesData.map((project) => (
-            <div
+            <SpotlightCard
               key={project.id}
-              className="group relative flex flex-col justify-between p-6 sm:p-7 rounded-xl bg-white/[0.02] border border-white/[0.08] hover:border-white/[0.18] hover:bg-white/[0.035] transition-all duration-200"
-            >
-              <div>
-                {/* Card Top: Badges & Links */}
-                <div className="flex items-center justify-between gap-3 mb-5">
-                  <span className="font-mono text-xs px-2.5 py-1 rounded-md bg-blue-500/10 border border-blue-500/20 text-blue-400 font-medium">
-                    {project.statusBadge}
-                  </span>
-
-                  <div className="flex items-center gap-2">
-                    {project.liveUrl && (
-                      <a
-                        href={project.liveUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="p-1.5 rounded-md text-slate-400 hover:text-white hover:bg-white/[0.08] transition-colors"
-                        aria-label={`Open ${project.title} live link`}
-                      >
-                        <ExternalLink className="w-4 h-4" />
-                      </a>
-                    )}
-                  </div>
-                </div>
-
-                {/* Title & Tagline */}
-                <div className="flex items-start gap-3.5 mb-3">
-                  {project.logoUrl && (
-                    <div className="w-10 h-10 rounded-lg bg-white/[0.05] border border-white/[0.1] p-1.5 flex items-center justify-center shrink-0">
-                      <Image
-                        src={project.logoUrl}
-                        alt={`${project.title} logo`}
-                        width={28}
-                        height={28}
-                        className="object-contain"
-                        style={{ width: "auto", height: "auto" }}
-                      />
-                    </div>
-                  )}
-                  <div>
-                    <h3 className="text-xl font-bold text-white group-hover:text-blue-400 transition-colors">
-                      {project.title}
-                    </h3>
-                    <p className="text-xs text-slate-400 font-medium">{project.subtitle}</p>
-                  </div>
-                </div>
-
-                <p className="text-sm text-slate-300 leading-relaxed mt-2.5">
-                  {project.tagline}
-                </p>
-
-                {/* Evidence snippet */}
-                <div className="grid grid-cols-3 gap-2 my-5 p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
-                  {project.evidence.map((item, idx) => (
-                    <div key={idx} className="text-left">
-                      <div className="text-[11px] text-slate-400 font-mono">{item.label}</div>
-                      <div className="text-xs font-semibold text-white mt-0.5 truncate">
-                        {item.value}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Tech tags */}
-                <div className="flex flex-wrap gap-1.5 mb-6">
-                  {project.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-slate-300 border border-white/[0.06]"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Action Button */}
-              <div className="pt-4 border-t border-white/[0.06] flex items-center justify-between">
-                <button
-                  type="button"
-                  onClick={() => setActiveModalId(project.id)}
-                  className="flex items-center gap-1.5 text-xs font-semibold text-blue-400 hover:text-blue-300 transition-colors group/btn"
-                >
-                  <span>Read Full Case Study</span>
-                  <ArrowRight className="w-3.5 h-3.5 group-hover/btn:translate-x-0.5 transition-transform" />
-                </button>
-
-                {project.liveUrl && (
-                  <a
-                    href={project.liveUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-xs font-medium text-slate-400 hover:text-white flex items-center gap-1 transition-colors"
-                  >
-                    <span>Visit Live</span>
-                    <ExternalLink className="w-3 h-3" />
-                  </a>
-                )}
-              </div>
-            </div>
+              project={project}
+              onOpenModal={() => setActiveModalId(project.id)}
+            />
           ))}
         </div>
       </div>
 
-      {/* Accessible Slide-over / Modal for Deep Dive */}
+      {/* Accessible Slide-over / Modal for Deep Dive with Smooth Reactbits Animation */}
       {activeStudy && (
         <div
           role="dialog"
           aria-modal="true"
           aria-labelledby="modal-title"
-          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/80 backdrop-blur-md overflow-y-auto"
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md overflow-y-auto"
         >
           {/* Modal Backdrop click listener */}
           <div
@@ -345,13 +385,13 @@ export default function CaseStudies() {
             aria-hidden="true"
           />
 
-          {/* Modal Content Box */}
-          <div className="relative w-full max-w-3xl max-h-[90vh] flex flex-col rounded-2xl bg-[#0c1017] border border-white/[0.14] shadow-2xl overflow-hidden z-10">
+          {/* Modal Content Box with smooth entrance */}
+          <div className="animate-modal relative w-full max-w-3xl max-h-[90vh] flex flex-col rounded-2xl bg-[#0c0d12] border border-white/[0.14] shadow-2xl overflow-hidden z-10">
             {/* Header */}
-            <div className="flex items-center justify-between px-6 py-4.5 border-b border-white/[0.08] bg-[#0c1017]/90 backdrop-blur-md sticky top-0 z-20">
+            <div className="flex items-center justify-between px-6 py-4.5 border-b border-white/[0.08] bg-[#0c0d12]/95 backdrop-blur-xl sticky top-0 z-20">
               <div className="flex items-center gap-3">
                 {activeStudy.logoUrl && (
-                  <div className="w-8 h-8 rounded bg-white/[0.05] p-1 border border-white/[0.1] flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-lg bg-zinc-900 p-1 border border-white/[0.1] flex items-center justify-center">
                     <Image
                       src={activeStudy.logoUrl}
                       alt={`${activeStudy.title} logo`}
@@ -363,10 +403,10 @@ export default function CaseStudies() {
                   </div>
                 )}
                 <div>
-                  <h3 id="modal-title" className="text-base sm:text-lg font-bold text-white">
+                  <h3 id="modal-title" className="text-base sm:text-lg font-bold text-white tracking-tight">
                     {activeStudy.title} — {activeStudy.subtitle}
                   </h3>
-                  <div className="text-xs text-blue-400 font-mono">{activeStudy.category}</div>
+                  <div className="text-xs text-zinc-400 font-mono mt-0.5">{activeStudy.category}</div>
                 </div>
               </div>
 
@@ -376,7 +416,7 @@ export default function CaseStudies() {
                     href={activeStudy.liveUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-xs font-semibold text-white transition-all"
+                    className="btn-primary-tactile hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-xs font-semibold text-white"
                   >
                     <span>Open Live</span>
                     <ExternalLink className="w-3.5 h-3.5" />
@@ -386,7 +426,7 @@ export default function CaseStudies() {
                   type="button"
                   onClick={() => setActiveModalId(null)}
                   aria-label="Close case study modal"
-                  className="p-1.5 rounded-lg text-slate-400 hover:text-white bg-white/[0.05] hover:bg-white/[0.1] transition-colors"
+                  className="p-1.5 rounded-lg text-zinc-400 hover:text-white bg-white/[0.05] hover:bg-white/[0.1] transition-colors"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -397,10 +437,10 @@ export default function CaseStudies() {
             <div className="px-6 py-6 space-y-7 overflow-y-auto">
               {/* Confidentiality Warning if present */}
               {activeStudy.confidentialityNote && (
-                <div className="flex items-start gap-3 p-3.5 rounded-lg bg-amber-500/10 border border-amber-500/20 text-xs text-amber-300">
+                <div className="flex items-start gap-3 p-3.5 rounded-xl bg-amber-500/[0.08] border border-amber-500/20 text-xs text-amber-200">
                   <ShieldAlert className="w-4 h-4 shrink-0 text-amber-400 mt-0.5" />
                   <div>
-                    <span className="font-semibold">Confidentiality Safeguard: </span>
+                    <span className="font-semibold text-amber-300">Confidentiality Safeguard: </span>
                     {activeStudy.confidentialityNote}
                   </div>
                 </div>
@@ -408,34 +448,34 @@ export default function CaseStudies() {
 
               {/* 1. Context & Problem */}
               <div>
-                <h4 className="text-xs font-mono uppercase tracking-wider text-slate-400 mb-2 font-medium">
+                <h4 className="text-xs font-mono uppercase tracking-wider text-zinc-400 mb-2 font-medium">
                   01. The Problem & Context
                 </h4>
-                <p className="text-sm sm:text-base text-slate-200 leading-relaxed">
+                <p className="text-sm sm:text-base text-zinc-200 leading-[1.65]">
                   {activeStudy.problem}
                 </p>
               </div>
 
               {/* 2. Role & Ownership */}
               <div>
-                <h4 className="text-xs font-mono uppercase tracking-wider text-slate-400 mb-2 font-medium">
+                <h4 className="text-xs font-mono uppercase tracking-wider text-zinc-400 mb-2 font-medium">
                   02. My Role & Scope
                 </h4>
-                <p className="text-sm sm:text-base text-slate-200 leading-relaxed">
+                <p className="text-sm sm:text-base text-zinc-200 leading-[1.65]">
                   {activeStudy.role}
                 </p>
               </div>
 
               {/* 3. Approach & Decisions */}
               <div>
-                <h4 className="text-xs font-mono uppercase tracking-wider text-slate-400 mb-2 font-medium">
+                <h4 className="text-xs font-mono uppercase tracking-wider text-zinc-400 mb-2 font-medium">
                   03. Product Decisions & Trade-Offs
                 </h4>
                 <div className="space-y-2.5">
                   {activeStudy.decisions.map((decision, i) => (
                     <div
                       key={i}
-                      className="flex items-start gap-2.5 text-sm text-slate-300 bg-white/[0.02] p-3 rounded-lg border border-white/[0.04]"
+                      className="flex items-start gap-2.5 text-sm text-zinc-300 bg-zinc-950/60 p-3.5 rounded-xl border border-white/[0.05]"
                     >
                       <CheckCircle2 className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
                       <span>{decision}</span>
@@ -446,10 +486,10 @@ export default function CaseStudies() {
 
               {/* 4. Deliverables & Evidence */}
               <div>
-                <h4 className="text-xs font-mono uppercase tracking-wider text-slate-400 mb-2 font-medium">
+                <h4 className="text-xs font-mono uppercase tracking-wider text-zinc-400 mb-2 font-medium">
                   04. Deliverables & Verifiable Evidence
                 </h4>
-                <ul className="list-disc list-inside space-y-1.5 text-sm text-slate-300">
+                <ul className="list-disc list-inside space-y-1.5 text-sm text-zinc-300">
                   {activeStudy.deliverables.map((deliv, i) => (
                     <li key={i}>{deliv}</li>
                   ))}
@@ -460,12 +500,12 @@ export default function CaseStudies() {
                   {activeStudy.evidence.map((item, idx) => (
                     <div
                       key={idx}
-                      className="p-3 rounded-lg bg-white/[0.03] border border-white/[0.06]"
+                      className="p-3.5 rounded-xl bg-zinc-950/60 border border-white/[0.06]"
                     >
-                      <div className="text-xs text-slate-400 font-mono">{item.label}</div>
+                      <div className="text-xs text-zinc-400 font-mono">{item.label}</div>
                       <div className="text-base font-bold text-white mt-0.5">{item.value}</div>
                       {item.detail && (
-                        <div className="text-[11px] text-blue-400 mt-0.5">{item.detail}</div>
+                        <div className="text-[11px] text-zinc-400 mt-0.5">{item.detail}</div>
                       )}
                     </div>
                   ))}
@@ -473,25 +513,25 @@ export default function CaseStudies() {
               </div>
 
               {/* 5. Key Learning */}
-              <div className="p-4 rounded-xl bg-blue-600/[0.08] border border-blue-500/20">
+              <div className="p-4.5 rounded-xl bg-blue-950/20 border border-blue-500/20">
                 <h4 className="text-xs font-mono uppercase tracking-wider text-blue-400 mb-1.5 font-semibold">
                   Key Product Management Takeaway
                 </h4>
-                <p className="text-sm text-slate-200 leading-relaxed font-medium">
+                <p className="text-sm text-zinc-200 leading-relaxed font-medium">
                   &ldquo;{activeStudy.learnings}&rdquo;
                 </p>
               </div>
             </div>
 
             {/* Footer */}
-            <div className="px-6 py-4 border-t border-white/[0.08] bg-[#0c1017] flex items-center justify-between">
-              <span className="text-xs text-slate-400 font-mono">
+            <div className="px-6 py-4 border-t border-white/[0.08] bg-[#0c0d12] flex items-center justify-between">
+              <span className="text-xs text-zinc-500 font-mono">
                 Verified portfolio case study
               </span>
               <button
                 type="button"
                 onClick={() => setActiveModalId(null)}
-                className="px-4 py-2 rounded-lg bg-white/[0.06] hover:bg-white/[0.12] text-xs font-semibold text-white transition-colors"
+                className="btn-secondary-tactile px-4 py-2 rounded-lg bg-white/[0.06] text-xs font-semibold text-white"
               >
                 Close Case Study
               </button>

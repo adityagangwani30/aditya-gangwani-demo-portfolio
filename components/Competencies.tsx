@@ -62,70 +62,72 @@ export default function Competencies() {
   ];
 
   return (
-    <section id="competencies" className="py-24 border-t border-white/[0.08] relative">
+    <section id="competencies" className="py-24 relative">
+      <div className="hairline-divider mb-20" />
+
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <div className="max-w-2xl mb-14">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-xs font-mono text-slate-300 uppercase tracking-wider mb-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-white/[0.08] text-xs font-mono text-zinc-300 uppercase tracking-wider mb-3">
             <Cpu className="w-3.5 h-3.5 text-blue-400" />
             <span>Skills & Capabilities</span>
           </div>
-          <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-white">
+          <h2 className="text-2xl sm:text-4xl font-bold tracking-[-0.03em] text-white">
             Where product thinking meets technical execution.
           </h2>
-          <p className="text-slate-400 text-sm sm:text-base mt-3">
+          <p className="text-zinc-400 text-sm sm:text-base mt-3 leading-relaxed">
             No subjective percentages or animated progress bars. Grounded competencies derived from 
             hands-on software development and verified product management projects.
           </p>
         </div>
 
         {/* 2-Column Core Competencies Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-7 mb-12">
           {/* Column 1: Product Management */}
-          <div className="p-7 rounded-xl bg-white/[0.02] border border-white/[0.08]">
+          <div className="p-7 rounded-2xl bg-zinc-950/60 border border-white/[0.08] shadow-sm">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-9 h-9 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
+              <div className="w-9 h-9 rounded-xl bg-zinc-900 border border-white/[0.1] flex items-center justify-center">
                 <CheckCircle className="w-5 h-5 text-blue-400" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-white">Product Management</h3>
-                <p className="text-xs text-slate-400">Discovery, prioritization, and strategy</p>
+                <h3 className="text-lg font-bold tracking-tight text-white">Product Management</h3>
+                <p className="text-xs text-zinc-400">Discovery, prioritization, and strategy</p>
               </div>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-3.5">
               {pmSkills.map((skill, idx) => (
-                <div key={idx} className="p-3.5 rounded-lg bg-white/[0.02] border border-white/[0.04]">
+                <div key={idx} className="p-4 rounded-xl bg-zinc-900/40 border border-white/[0.04] hover:border-white/[0.08] transition-colors">
                   <div className="text-sm font-semibold text-white mb-1">{skill.title}</div>
-                  <div className="text-xs text-slate-300 leading-relaxed">{skill.desc}</div>
+                  <div className="text-xs text-zinc-300 leading-relaxed">{skill.desc}</div>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Column 2: Technical & AI Capabilities */}
-          <div className="p-7 rounded-xl bg-white/[0.02] border border-white/[0.08]">
+          <div className="p-7 rounded-2xl bg-zinc-950/60 border border-white/[0.08] shadow-sm">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-9 h-9 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center">
+              <div className="w-9 h-9 rounded-xl bg-zinc-900 border border-white/[0.1] flex items-center justify-center">
                 <Terminal className="w-5 h-5 text-indigo-400" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-white">Technical & AI Engineering</h3>
-                <p className="text-xs text-slate-400">Languages, frameworks, and applied ML</p>
+                <h3 className="text-lg font-bold tracking-tight text-white">Technical & AI Engineering</h3>
+                <p className="text-xs text-zinc-400">Languages, frameworks, and applied ML</p>
               </div>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-3.5">
               {technicalSkills.map((group, idx) => (
-                <div key={idx} className="p-3.5 rounded-lg bg-white/[0.02] border border-white/[0.04]">
-                  <div className="text-xs font-mono uppercase tracking-wider text-slate-400 mb-2">
+                <div key={idx} className="p-4 rounded-xl bg-zinc-900/40 border border-white/[0.04] hover:border-white/[0.08] transition-colors">
+                  <div className="text-xs font-mono uppercase tracking-wider text-zinc-400 mb-2.5 font-medium">
                     {group.category}
                   </div>
                   <div className="flex flex-wrap gap-1.5">
                     {group.items.map((item) => (
                       <span
                         key={item}
-                        className="text-xs font-mono px-2.5 py-1 rounded bg-white/[0.04] text-slate-200 border border-white/[0.07]"
+                        className="text-xs font-mono px-2.5 py-1 rounded-md bg-white/[0.03] text-zinc-200 border border-white/[0.06]"
                       >
                         {item}
                       </span>
@@ -138,20 +140,20 @@ export default function Competencies() {
         </div>
 
         {/* Verified Toolstack Card */}
-        <div className="p-7 rounded-xl bg-white/[0.02] border border-white/[0.08]">
+        <div className="p-7 rounded-2xl bg-zinc-950/60 border border-white/[0.08] shadow-sm">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-white/[0.05] border border-white/[0.1] flex items-center justify-center">
-                <Wrench className="w-4 h-4 text-slate-300" />
+              <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-white/[0.1] flex items-center justify-center">
+                <Wrench className="w-4 h-4 text-zinc-300" />
               </div>
               <div>
-                <h3 className="text-base font-bold text-white">Verified Day-to-Day Toolstack</h3>
-                <p className="text-xs text-slate-400">Tools with documented, hands-on production usage</p>
+                <h3 className="text-base font-bold text-white tracking-tight">Verified Day-to-Day Toolstack</h3>
+                <p className="text-xs text-zinc-400">Tools with documented, hands-on production usage</p>
               </div>
             </div>
 
             {/* Authenticity notice */}
-            <div className="inline-flex items-center gap-1.5 text-xs text-slate-400 font-mono">
+            <div className="inline-flex items-center gap-1.5 text-xs text-zinc-400 font-mono">
               <Shield className="w-3.5 h-3.5 text-blue-400" />
               <span>Strictly omitting unverified enterprise tool names</span>
             </div>
@@ -161,10 +163,10 @@ export default function Competencies() {
             {verifiedTools.map((tool, idx) => (
               <div
                 key={idx}
-                className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.05] text-left hover:border-white/[0.12] transition-colors"
+                className="p-3.5 rounded-xl bg-zinc-900/50 border border-white/[0.04] text-left hover:border-white/[0.1] transition-colors"
               >
                 <div className="text-xs font-semibold text-white">{tool.name}</div>
-                <div className="text-[11px] text-slate-400 mt-0.5">{tool.type}</div>
+                <div className="text-[11px] text-zinc-400 mt-0.5">{tool.type}</div>
               </div>
             ))}
           </div>

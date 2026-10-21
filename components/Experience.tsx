@@ -1,6 +1,6 @@
 "use client";
 
-import { Briefcase, Calendar, MapPin, ShieldCheck, Award } from "lucide-react";
+import { Briefcase, Calendar, MapPin, ShieldCheck } from "lucide-react";
 
 interface RoleItem {
   company: string;
@@ -106,55 +106,57 @@ const experiences: RoleItem[] = [
 
 export default function Experience() {
   return (
-    <section id="experience" className="py-24 border-t border-white/[0.08] relative">
+    <section id="experience" className="py-24 relative">
+      <div className="hairline-divider mb-20" />
+
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
         {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-14">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-xs font-mono text-slate-300 uppercase tracking-wider mb-3">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-white/[0.08] text-xs font-mono text-zinc-300 uppercase tracking-wider mb-3">
               <Briefcase className="w-3.5 h-3.5 text-blue-400" />
               <span>Professional History</span>
             </div>
-            <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-white">
+            <h2 className="text-2xl sm:text-4xl font-bold tracking-[-0.03em] text-white">
               Work Experience & Roles
             </h2>
           </div>
 
           {/* Confidentiality Notice Badge */}
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.06] text-slate-400 text-xs">
+          <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-zinc-950/80 border border-white/[0.08] text-zinc-400 text-xs shadow-sm">
             <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
             <span>Corporate metrics & roadmaps protected under NDAs</span>
           </div>
         </div>
 
         {/* Vertical Timeline */}
-        <div className="relative border-l border-white/[0.1] ml-3 sm:ml-4 pl-6 sm:pl-8 space-y-12">
+        <div className="relative border-l border-zinc-800/80 ml-3 sm:ml-4 pl-6 sm:pl-8 space-y-10">
           {experiences.map((exp, idx) => (
             <div key={idx} className="relative group">
               {/* Timeline Bullet Node */}
-              <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-3.5 h-3.5 rounded-full bg-[#090a0f] border-2 border-blue-500 group-hover:scale-125 group-hover:border-blue-400 transition-all duration-200" />
+              <div className="absolute -left-[31px] sm:-left-[39px] top-2 w-3.5 h-3.5 rounded-full bg-[#090a0f] border-2 border-zinc-500 group-hover:scale-125 group-hover:border-blue-400 transition-all duration-200" />
 
               {/* Card Container */}
-              <div className="p-6 rounded-xl bg-white/[0.02] border border-white/[0.08] group-hover:border-white/[0.14] group-hover:bg-white/[0.035] transition-all">
+              <div className="p-6 sm:p-7 rounded-2xl bg-zinc-950/60 border border-white/[0.07] group-hover:border-white/[0.14] group-hover:bg-zinc-900/40 transition-all duration-200 shadow-sm">
                 {/* Meta Header */}
                 <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors">
+                    <span className="text-lg font-bold text-white group-hover:text-zinc-100 transition-colors">
                       {exp.role}
                     </span>
-                    <span className="text-sm font-semibold text-slate-400">@ {exp.company}</span>
+                    <span className="text-sm font-semibold text-zinc-400">@ {exp.company}</span>
                   </div>
 
                   {/* Type Badge */}
                   <span
                     className={`text-[11px] font-mono px-2.5 py-0.5 rounded-full border ${
                       exp.type === "Full-Time / Contract"
-                        ? "bg-blue-500/10 border-blue-500/30 text-blue-400"
+                        ? "bg-blue-500/10 border-blue-500/25 text-blue-300"
                         : exp.type === "Internship"
-                        ? "bg-purple-500/10 border-purple-500/30 text-purple-300"
+                        ? "bg-purple-500/10 border-purple-500/25 text-purple-300"
                         : exp.type === "Leadership"
-                        ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-300"
-                        : "bg-slate-500/10 border-slate-500/30 text-slate-300"
+                        ? "bg-emerald-500/10 border-emerald-500/25 text-emerald-300"
+                        : "bg-zinc-500/10 border-zinc-500/25 text-zinc-300"
                     }`}
                   >
                     {exp.type}
@@ -162,38 +164,38 @@ export default function Experience() {
                 </div>
 
                 {/* Sub-meta: Timeline and Location */}
-                <div className="flex flex-wrap items-center gap-4 text-xs text-slate-400 font-mono mb-4">
+                <div className="flex flex-wrap items-center gap-4 text-xs text-zinc-400 font-mono mb-4">
                   <div className="flex items-center gap-1.5">
-                    <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                    <Calendar className="w-3.5 h-3.5 text-zinc-500" />
                     <span>{exp.timeline}</span>
                   </div>
                   {exp.location && (
                     <div className="flex items-center gap-1.5">
-                      <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                      <MapPin className="w-3.5 h-3.5 text-zinc-500" />
                       <span>{exp.location}</span>
                     </div>
                   )}
                 </div>
 
                 {/* Role Summary */}
-                <p className="text-sm text-slate-300 leading-relaxed mb-4">{exp.summary}</p>
+                <p className="text-sm text-zinc-300 leading-relaxed mb-4">{exp.summary}</p>
 
                 {/* Key Deliverables */}
                 <div className="space-y-2 mb-5">
                   {exp.deliverables.map((item, dIdx) => (
-                    <div key={dIdx} className="flex items-start gap-2 text-xs text-slate-300 leading-normal">
-                      <span className="text-blue-400 font-bold shrink-0">›</span>
+                    <div key={dIdx} className="flex items-start gap-2 text-xs text-zinc-300 leading-normal">
+                      <span className="text-zinc-500 font-bold shrink-0">›</span>
                       <span>{item}</span>
                     </div>
                   ))}
                 </div>
 
                 {/* Skills/Tags */}
-                <div className="flex flex-wrap gap-1.5 pt-3 border-t border-white/[0.04]">
+                <div className="flex flex-wrap gap-1.5 pt-3.5 border-t border-white/[0.04]">
                   {exp.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.03] text-slate-400 border border-white/[0.05]"
+                      className="text-[11px] font-mono px-2 py-0.5 rounded-md bg-white/[0.025] text-zinc-400 border border-white/[0.05]"
                     >
                       {tag}
                     </span>
