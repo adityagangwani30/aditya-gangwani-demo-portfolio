@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none" role="img" aria-label="FeatureSmith mark">
+  <defs>
+    <linearGradient id="featuresmith-top" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#2563EB" />
+      <stop offset="100%" stop-color="#06B5D4" />
+    </linearGradient>
+    <linearGradient id="featuresmith-middle" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#7C3AED" />
+      <stop offset="100%" stop-color="#6366F1" />
+    </linearGradient>
+    <linearGradient id="featuresmith-bottom" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#2B3142" />
+      <stop offset="100%" stop-color="#4B5563" />
+    </linearGradient>
+  </defs>
+  <rect x="6" y="6" width="20" height="4" rx="2" ry="2" fill="url(#featuresmith-top)" />
+  <rect x="6" y="14" width="15" height="4" rx="2" ry="2" fill="url(#featuresmith-middle)" />
+  <rect x="6" y="22" width="8" height="4" rx="2" ry="2" fill="url(#featuresmith-bottom)" />
+</svg>
